@@ -55,6 +55,14 @@
     <button>Trigger a Global Error</button>
   </section>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "5fccc1539b45467093eec72f1bb8f5a8"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
   <script>
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
@@ -62,11 +70,87 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try{
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch(err){
+        throw new myError('There are no input');
+      }
+      finally{
+        console.log('finally');
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
     // TODO - Make buttons functional
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+    errorBtns[1].addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+    errorBtns[2].addEventListener('click', () => {
+      console.dir(errorBtns[2]);
+    });
+    errorBtns[3].addEventListener('click', () => {
+      console.dirxml(document);
+    });
+    const label = 'Log Group';
+    errorBtns[4].addEventListener('click', () => {
+      console.group(label);
+    });
+    errorBtns[5].addEventListener('click', () => {
+      console.groupEnd(label);
+    });
+    errorBtns[6].addEventListener('click', () => {
+      console.table([
+        {
+          name: 'Software Engineering',
+          num: 110
+        },
+        {
+          name: 'Programming Languages',
+          num: 130
+        },
+        {
+          name: 'Advanced Software Engineering',
+          num: 112
+        }
+      ]);
+    });
+    errorBtns[7].addEventListener('click', () => {
+      console.time();
+      console.info('Timer started');
+    });
+    errorBtns[8].addEventListener('click', () => { 
+      console.info('Timer ended');
+      console.timeEnd();
+    });
+    errorBtns[9].addEventListener('click', () => {
+      const traceTest = () => { deep(); };
+      const deep = () => { deeper(); };
+      const deeper = () => { deepest(); };
+      const deepest = () => { console.trace(); };
+      traceTest();
+    });
+    errorBtns[10].addEventListener('click', () => {
+      try{
+        fakeId = document.fakeFunction('invalid');
+      }
+      catch(err){
+        throw err;
+      }
+    });
+    window.onerror = () => {
+      console.info('Sadly an error happened');
+    };
+
+    class myError extends Error {
+      constructor(message){
+        super(message);
+        this.name = 'customError';
+      }
+    }
   </script>
 </body>
 </html>
